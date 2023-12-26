@@ -16,9 +16,9 @@ const port = process.env.PORT || 3000
 // })
 
 
-app.use((req, res, next) => {
-    res.status(503).send('Website is maintaining...')
-})
+// app.use((req, res, next) => {
+//     res.status(503).send('Website is maintaining...')
+// })
 
 app.use(express.json())
 app.use(userRouter)
@@ -39,5 +39,6 @@ const mF = async () => {
     const data = jwt.verify(token, 'thisismycourse')
     console.log('data', data);
 }   
+
 
 mF()
