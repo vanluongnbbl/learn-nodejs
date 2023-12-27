@@ -91,6 +91,7 @@ userSchema.statics.findByCredentials = async (email, password) => {
     return user
 }
 
+// Hash the plain text password before saving
 userSchema.pre('save', async function(next) {
     const user = this
    
@@ -103,16 +104,3 @@ userSchema.pre('save', async function(next) {
 const User = mongoose.model('User', userSchema)
 
 module.exports = User
-
-// const me = new User({
-//     name: 'HEHE huhu    ',
-//     age: 18,
-//     email: '    hehehuhu@gmail.com',
-//     password: 'passwsord1111'
-// })
-
-// me.save().then(() => {
-//     console.log(me);
-// }).catch((err) => {
-//     console.log('Error!', err);
-// })
