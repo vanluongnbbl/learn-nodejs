@@ -8,15 +8,6 @@ const app = express()
 const port = process.env.PORT || 3000
 
 // app.use((req, res, next) => {
-//     if (req.method === 'GET') {
-//         res.send('GET requests qre disabled')
-//     } else {
-//         next()
-//     }
-// })
-
-
-// app.use((req, res, next) => {
 //     res.status(503).send('Website is maintaining...')
 // })
 
@@ -29,16 +20,18 @@ app.listen(port, () => {
     console.log('Server is up on port ' + port );
 })
 
-const jwt = require('jsonwebtoken')
 
-const mF = async () => {
-   
-    const token = jwt.sign({ _id: 'abc123' }, 'thisismycourse', { expiresIn: '7 days' })
-    console.log('token', token);
+const Task = require('./models/task')
+const User = require('./models/user')
 
-    const data = jwt.verify(token, 'thisismycourse')
-    console.log('data', data);
-}   
+const main = async () => {
+    // const task = await Task.findById('658b888d9322d9b333a78325')
+    // await task.populate('owner')
+    // console.log('tsss',task.owner)
 
+    const user = await User.findById('658aa5835c650eece0b489e9')
+    await user.populate('tasks')
+    console.log('user', user.tasks)
+}
 
-mF()
+main()
