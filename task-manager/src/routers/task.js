@@ -5,7 +5,9 @@ const Task = require('../models/task')
 
 router.get('/tasks', auth, async (req, res) => {
     const match = {}
-    
+    const limit = parseInt(req.query.limit)
+    const page = parseInt(req.query.page)
+    const skip = (page - 1) * limit
     if (req.query.completed) {
         match.completed = req.query.completed === 'true'
     }
@@ -13,7 +15,11 @@ router.get('/tasks', auth, async (req, res) => {
     try {
         await req.user.populate({
             path: 'tasks',
-            match
+            match,
+            options: {
+                limit,
+                skip,
+            }
         })
         // if (!tasks) {
         //     res.status(404).send()
