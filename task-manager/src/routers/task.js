@@ -4,12 +4,21 @@ const router = new express.Router()
 const Task = require('../models/task')
 
 router.get('/tasks', auth, async (req, res) => {
+    const match = {}
+    
+    if (req.query.completed) {
+        match.completed = req.query.completed === 'true'
+    }
+
     try {
-        const tasks = await Task.find({ owner: req.user._id })
-        if (!tasks) {
-            res.status(404).send()
-        }
-        res.send(tasks)
+        await req.user.populate({
+            path: 'tasks',
+            match
+        })
+        // if (!tasks) {
+        //     res.status(404).send()
+        // }
+        res.send(req.user.tasks)
     } catch (error) {
         res.status(500).send(error)
     }
