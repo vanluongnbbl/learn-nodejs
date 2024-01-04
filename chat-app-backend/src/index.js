@@ -1,5 +1,7 @@
 const express = require('express')
 const path = require('path')
+var Filter = require('bad-words')
+
 // const cors = require("cors");
 const http = require('http')
 const socketIo = require('socket.io')
@@ -29,8 +31,15 @@ io.on('connection', (socket) => {
     socket.emit('message', message => {
         console.log(message)
     })
-    socket.on('chat message', (msg) => {
-        io.emit('message', msg)
+    socket.on('chat message', (msg, callback) => {
+        const filter = new Filter();
+
+        if (filter.isProfane(message)) {
+            return callback('Profanity is not allowed!')
+        }
+
+        io.emit('message', filter.clean(msg))
+        callback('delivered')
     })
     socket.on('disconnect', () => {
         io.emit('message', 'A user has left!')
@@ -38,8 +47,10 @@ io.on('connection', (socket) => {
 
 
     // location
-    socket.on('send-location', (coords) => {
+    socket.on('send-location', (coords, callback) => {
         io.emit('message', `https://google.com/maps?q=${coords.latitude},${coords.longitude}`)
+
+        callback('Location sent!')
     })
 
     socket.broadcast.emit('location', 'new locaiton')

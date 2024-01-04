@@ -21,8 +21,16 @@ const input = document.getElementById('inputChat');
 
 form.addEventListener('submit', (e) => {
   e.preventDefault();
+  
   if (input.value) {
-    socket.emit('chat message', input.value);
+    const message = input.value
+    socket.emit('chat message', message, (error) => {
+      if (error) {
+        return console.log(error)
+      }
+
+      console.log('Message delivered')
+    });
     input.value = '';
   }
 });
@@ -37,6 +45,12 @@ document.querySelector('#send-location').addEventListener('click', () => {
     socket.emit('send-location', {
       latitude: position.coords.latitude,
       longitude: position.coords.longitude
+    }, (error) => {
+      if (error) {
+        return console.log(error)
+      }
+
+      console.log('Location delivered')
     })
   })
 })
